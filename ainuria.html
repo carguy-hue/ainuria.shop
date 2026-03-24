@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AINURIA — Luxury Catalog</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8d08a;
+    --gold-dark: #9a7530;
+    --black: #0a0a0a;
+    --dark: #111111;
+    --dark2: #1a1a1a;
+    --dark3: #222222;
+    --white: #f5f0e8;
+    --white2: #e8e0d0;
+    --grey: #666;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 10px; height: 10px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: all 0.15s ease;
+    opacity: 0.6;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--gold-dark); }
+
+  /* ─── HEADER ─── */
+  header {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 60px;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.98), transparent);
+    border-bottom: 1px solid rgba(201,168,76,0.12);
+    backdrop-filter: blur(10px);
+  }
+
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+  .logo span { color: var(--white); }
+
+  nav { display: flex; gap: 40px; }
+  nav a {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--white2);
+    text-decoration: none;
+    opacity: 0.7;
+    transition: opacity 0.3s, color 0.3s;
+    position: relative;
+  }
+  nav a::after {
+    content: '';
+    position: absolute; bottom: -4px; left: 0; right: 0;
+    height: 1px; background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+    transform-origin: left;
+  }
+  nav a:hover { opacity: 1; color: var(--gold); }
+  nav a:hover::after { transform: scaleX(1); }
+
+  .header-right { display: flex; align-items: center; gap: 28px; }
+  .cart-btn {
+    font-size: 10px; letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: none; border: 1px solid rgba(201,168,76,0.4);
+    padding: 10px 22px; cursor: none;
+    transition: all 0.3s;
+  }
+  .cart-btn:hover { background: var(--gold); color: var(--black); }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 60px 100px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 70% 40%, rgba(201,168,76,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 20% 70%, rgba(201,168,76,0.04) 0%, transparent 50%),
+      linear-gradient(135deg, #0a0a0a 0%, #111108 50%, #0a0a0a 100%);
+  }
+
+  /* Decorative lines */
+  .hero-lines {
+    position: absolute; inset: 0;
+    pointer-events: none;
+  }
+  .hero-lines::before {
+    content: '';
+    position: absolute;
+    top: 15%; right: 10%;
+    width: 1px; height: 60%;
+    background: linear-gradient(to bottom, transparent, rgba(201,168,76,0.3), transparent);
+  }
+  .hero-lines::after {
+    content: '';
+    position: absolute;
+    top: 25%; right: 25%;
+    width: 300px; height: 1px;
+    background: linear-gradient(to right, transparent, rgba(201,168,76,0.2), transparent);
+  }
+
+  .hero-tag {
+    font-size: 9px; letter-spacing: 0.4em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 24px; opacity: 0;
+    animation: fadeUp 1s ease 0.3s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(60px, 9vw, 130px);
+    font-weight: 300;
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+    color: var(--white);
+    opacity: 0;
+    animation: fadeUp 1s ease 0.5s forwards;
+  }
+  .hero-title em {
+    font-style: italic; color: var(--gold);
+    display: block;
+  }
+
+  .hero-sub {
+    margin-top: 36px;
+    font-size: 11px; letter-spacing: 0.2em;
+    color: var(--grey);
+    max-width: 400px;
+    line-height: 1.8;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.7s forwards;
+  }
+
+  .hero-cta {
+    margin-top: 52px;
+    display: flex; gap: 20px; align-items: center;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.9s forwards;
+  }
+  .btn-primary {
+    font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+    padding: 16px 44px;
+    background: var(--gold);
+    color: var(--black);
+    border: none; cursor: none;
+    text-decoration: none;
+    transition: all 0.3s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--gold-light); }
+  .btn-ghost {
+    font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+    padding: 16px 44px;
+    background: transparent;
+    color: var(--white2);
+    border: 1px solid rgba(245,240,232,0.2);
+    cursor: none;
+    text-decoration: none;
+    transition: all 0.3s;
+    display: inline-block;
+  }
+  .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+  .hero-scroll {
+    position: absolute; bottom: 50px; right: 60px;
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    opacity: 0; animation: fadeIn 1s ease 1.2s forwards;
+  }
+  .hero-scroll span {
+    font-size: 8px; letter-spacing: 0.4em;
+    text-transform: uppercase; color: var(--grey);
+    writing-mode: vertical-rl;
+  }
+  .scroll-line {
+    width: 1px; height: 60px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s ease infinite;
+  }
+
+  /* ─── MARQUEE ─── */
+  .marquee-wrap {
+    border-top: 1px solid rgba(201,168,76,0.15);
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    padding: 16px 0;
+    overflow: hidden;
+    background: rgba(201,168,76,0.03);
+  }
+  .marquee-inner {
+    display: flex; gap: 60px;
+    animation: marquee 20s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-item {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px; font-style: italic;
+    letter-spacing: 0.15em;
+    color: var(--gold); opacity: 0.6;
+    flex-shrink: 0;
+  }
+  .marquee-dot { color: var(--gold); opacity: 0.3; font-size: 8px; }
+
+  /* ─── SECTION HEADER ─── */
+  .section-header {
+    text-align: center;
+    margin-bottom: 70px;
+  }
+  .section-label {
+    font-size: 9px; letter-spacing: 0.5em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 16px; display: block;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(40px, 5vw, 70px);
+    font-weight: 300;
+    color: var(--white);
+    line-height: 1;
+  }
+  .section-title em { font-style: italic; color: var(--gold); }
+  .section-line {
+    width: 60px; height: 1px;
+    background: var(--gold);
+    margin: 24px auto 0;
+    opacity: 0.5;
+  }
+
+  /* ─── CATEGORIES SECTION ─── */
+  .categories {
+    padding: 120px 60px;
+    background: var(--dark);
+  }
+
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .cat-card {
+    position: relative;
+    height: 500px;
+    overflow: hidden;
+    cursor: none;
+  }
+
+  .cat-bg {
+    position: absolute; inset: 0;
+    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .cat-card:hover .cat-bg { transform: scale(1.06); }
+
+  .cat-card:nth-child(1) .cat-bg {
+    background: 
+      radial-gradient(ellipse at 60% 30%, rgba(201,168,76,0.15) 0%, transparent 50%),
+      linear-gradient(160deg, #1a1208 0%, #0a0a0a 100%);
+  }
+  .cat-card:nth-child(2) .cat-bg {
+    background:
+      radial-gradient(ellipse at 40% 60%, rgba(201,168,76,0.12) 0%, transparent 50%),
+      linear-gradient(200deg, #111 0%, #0d0d0d 100%);
+  }
+  .cat-card:nth-child(3) .cat-bg {
+    background:
+      radial-gradient(ellipse at 50% 40%, rgba(201,168,76,0.1) 0%, transparent 50%),
+      linear-gradient(180deg, #0f0e0a 0%, #0a0a0a 100%);
+  }
+
+  /* Category emoji/icon as decorative */
+  .cat-icon {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -60%);
+    font-size: 80px;
+    opacity: 0.08;
+    transition: opacity 0.5s, transform 0.5s;
+    pointer-events: none;
+    filter: grayscale(1);
+  }
+  .cat-card:hover .cat-icon { opacity: 0.13; transform: translate(-50%, -62%); }
+
+  .cat-deco {
+    position: absolute;
+    top: 30px; right: 30px;
+    width: 60px; height: 60px;
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 50%;
+  }
+  .cat-deco::after {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 50%;
+  }
+
+  .cat-content {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 40px;
+    background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 70%, transparent 100%);
+  }
+
+  .cat-num {
+    font-size: 9px; letter-spacing: 0.4em;
+    color: var(--gold); opacity: 0.7;
+    margin-bottom: 12px;
+  }
+  .cat-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px; font-weight: 300;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+  .cat-desc {
+    font-size: 10px; letter-spacing: 0.1em;
+    color: var(--grey);
+    margin-bottom: 28px;
+    line-height: 1.7;
+  }
+  .cat-link {
+    font-size: 9px; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--gold);
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 10px;
+    transition: gap 0.3s;
+  }
+  .cat-link:hover { gap: 16px; }
+  .cat-link::after {
+    content: '→';
+    font-size: 14px;
+  }
+
+  /* ─── PRODUCTS SECTION ─── */
+  .products-section {
+    padding: 120px 60px;
+    background: var(--black);
+  }
+
+  .products-section + .products-section {
+    padding-top: 0;
+    border-top: 1px solid rgba(201,168,76,0.08);
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: rgba(201,168,76,0.08);
+  }
+
+  .product-card {
+    background: var(--black);
+    position: relative;
+    overflow: hidden;
+    cursor: none;
+    transition: background 0.4s;
+  }
+  .product-card:hover { background: var(--dark2); }
+
+  .product-img {
+    height: 280px;
+    position: relative;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--dark2);
+  }
+
+  .product-img-inner {
+    font-size: 90px;
+    opacity: 0.18;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s;
+    filter: grayscale(0.5);
+  }
+  .product-card:hover .product-img-inner {
+    transform: scale(1.08);
+    opacity: 0.25;
+  }
+
+  .product-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, transparent 50%, rgba(10,10,10,0.6));
+  }
+
+  .product-badge {
+    position: absolute; top: 16px; left: 16px;
+    font-size: 8px; letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    background: var(--gold);
+    color: var(--black);
+  }
+
+  .product-info { padding: 24px; }
+
+  .product-brand {
+    font-size: 8px; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--gold);
+    opacity: 0.7; margin-bottom: 8px;
+  }
+  .product-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; font-weight: 400;
+    color: var(--white);
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+  .product-variant {
+    font-size: 9px; letter-spacing: 0.1em;
+    color: var(--grey);
+    margin-bottom: 20px;
+  }
+
+  .product-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 18px;
+    border-top: 1px solid rgba(201,168,76,0.12);
+  }
+
+  .product-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 300;
+    color: var(--gold);
+  }
+  .product-price-currency {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    margin-right: 4px;
+  }
+
+  .add-btn {
+    font-size: 8px; letter-spacing: 0.25em;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    background: none;
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold);
+    cursor: none;
+    transition: all 0.3s;
+  }
+  .add-btn:hover {
+    background: var(--gold);
+    color: var(--black);
+    border-color: var(--gold);
+  }
+
+  /* ─── BANNER ─── */
+  .banner {
+    padding: 100px 60px;
+    background: var(--dark2);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    border-top: 1px solid rgba(201,168,76,0.1);
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+  }
+
+  .banner-text .section-label { text-align: left; }
+  .banner-text .section-title { text-align: left; font-size: 56px; }
+  .banner-body {
+    margin-top: 28px;
+    font-size: 11px; line-height: 1.9;
+    color: var(--grey);
+    letter-spacing: 0.05em;
+  }
+  .banner-cta { margin-top: 44px; }
+
+  .banner-visual {
+    position: relative;
+    height: 400px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .banner-circle {
+    width: 280px; height: 280px;
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 50%;
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    animation: rotateSlow 30s linear infinite;
+  }
+  .banner-circle::before {
+    content: '';
+    position: absolute;
+    inset: 20px;
+    border: 1px solid rgba(201,168,76,0.08);
+    border-radius: 50%;
+  }
+  .banner-icon {
+    font-size: 80px;
+    opacity: 0.15;
+    animation: rotateSlow 30s linear infinite reverse;
+  }
+  .banner-dot {
+    position: absolute;
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    top: -3px; left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 12px var(--gold);
+  }
+
+  /* ─── NEWSLETTER ─── */
+  .newsletter {
+    padding: 100px 60px;
+    text-align: center;
+    background: var(--black);
+  }
+  .newsletter .section-title { margin-bottom: 16px; }
+  .newsletter-sub {
+    font-size: 11px; color: var(--grey);
+    letter-spacing: 0.08em; line-height: 1.8;
+    margin-bottom: 44px;
+  }
+  .newsletter-form {
+    display: flex; gap: 0;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  .newsletter-input {
+    flex: 1;
+    padding: 16px 24px;
+    background: var(--dark2);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-right: none;
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    outline: none;
+  }
+  .newsletter-input::placeholder { color: var(--grey); }
+  .newsletter-input:focus { border-color: rgba(201,168,76,0.5); }
+  .newsletter-submit {
+    padding: 16px 32px;
+    background: var(--gold);
+    color: var(--black);
+    border: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px; letter-spacing: 0.3em;
+    text-transform: uppercase;
+    cursor: none;
+    transition: background 0.3s;
+  }
+  .newsletter-submit:hover { background: var(--gold-light); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    padding: 70px 60px 40px;
+    background: var(--dark);
+    border-top: 1px solid rgba(201,168,76,0.1);
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 60px;
+  }
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; font-weight: 300;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+  .footer-desc {
+    font-size: 10px; line-height: 1.9;
+    color: var(--grey); letter-spacing: 0.05em;
+    max-width: 280px;
+  }
+  .footer-col h4 {
+    font-size: 9px; letter-spacing: 0.4em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 24px; opacity: 0.7;
+  }
+  .footer-col a {
+    display: block;
+    font-size: 11px; color: var(--grey);
+    text-decoration: none;
+    margin-bottom: 12px;
+    letter-spacing: 0.05em;
+    transition: color 0.3s;
+  }
+  .footer-col a:hover { color: var(--white2); }
+  .footer-bottom {
+    padding-top: 30px;
+    border-top: 1px solid rgba(201,168,76,0.08);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-copy {
+    font-size: 9px; color: var(--grey);
+    letter-spacing: 0.15em;
+  }
+  .footer-socials { display: flex; gap: 20px; }
+  .footer-socials a {
+    font-size: 9px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--grey);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .footer-socials a:hover { color: var(--gold); }
+
+  /* ─── PAGE SECTIONS (hidden by default) ─── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+  @keyframes rotateSlow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* ─── CATEGORY PAGE ─── */
+  .cat-page-hero {
+    min-height: 40vh;
+    display: flex; flex-direction: column;
+    justify-content: flex-end;
+    padding: 140px 60px 80px;
+    position: relative;
+    background: linear-gradient(135deg, #0a0a0a, #111108);
+    border-bottom: 1px solid rgba(201,168,76,0.12);
+  }
+  .cat-page-hero .section-label { text-align: left; margin-bottom: 12px; }
+  .cat-page-hero .section-title { text-align: left; font-size: 72px; }
+
+  .products-page-grid {
+    padding: 80px 60px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(201,168,76,0.08);
+  }
+  .products-page-grid .product-img { height: 340px; }
+
+  .back-btn {
+    font-size: 9px; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--gold);
+    background: none; border: none;
+    cursor: none;
+    display: inline-flex; align-items: center; gap: 10px;
+    transition: gap 0.3s;
+    padding: 0;
+    margin-top: 20px;
+  }
+  .back-btn::before { content: '←'; font-size: 14px; }
+  .back-btn:hover { gap: 16px; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 40px; right: 40px;
+    background: var(--dark2);
+    border: 1px solid rgba(201,168,76,0.3);
+    padding: 16px 28px;
+    font-size: 11px; letter-spacing: 0.1em;
+    color: var(--white2);
+    z-index: 9999;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    pointer-events: none;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast span { color: var(--gold); }
+
+  @media (max-width: 900px) {
+    header { padding: 20px 24px; }
+    .logo { font-size: 22px; }
+    nav { display: none; }
+    .hero { padding: 0 24px 80px; }
+    .categories { padding: 80px 24px; }
+    .cat-grid { grid-template-columns: 1fr; }
+    .cat-card { height: 350px; }
+    .products-section { padding: 80px 24px; }
+    .products-grid { grid-template-columns: repeat(2, 1fr); }
+    .banner { padding: 80px 24px; grid-template-columns: 1fr; gap: 40px; }
+    .newsletter { padding: 80px 24px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+    .products-page-grid { padding: 40px 24px; grid-template-columns: repeat(2, 1fr); }
+    .cat-page-hero { padding: 120px 24px 60px; }
+    footer { padding: 60px 24px 30px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Toast -->
+<div class="toast" id="toast">Добавлено в корзину — <span id="toastItem"></span></div>
+
+<!-- HEADER -->
+<header>
+  <a href="#" class="logo" onclick="showPage('home')">AINURIA</a>
+  <nav>
+    <a href="#" onclick="showPage('home')">Главная</a>
+    <a href="#" onclick="showCat('perfume')">Парфюмы</a>
+    <a href="#" onclick="showCat('watches')">Часы</a>
+    <a href="#" onclick="showCat('beauty')">Косметика</a>
+  </nav>
+  <div class="header-right">
+    <button class="cart-btn" id="cartBtn">Корзина (0)</button>
+  </div>
+</header>
+
+<!-- ══════════ HOME PAGE ══════════ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-lines"></div>
+    <div class="hero-tag">Коллекция 2024 — Премиальный каталог</div>
+    <h1 class="hero-title">
+      Роскошь<br>в каждой
+      <em>детали</em>
+    </h1>
+    <p class="hero-sub">Тщательно отобранные ароматы, часы и средства по уходу для тех, кто ценит совершенство.</p>
+    <div class="hero-cta">
+      <a href="#" class="btn-primary" onclick="document.querySelector('.categories').scrollIntoView({behavior:'smooth'})">Смотреть каталог</a>
+      <a href="#" class="btn-ghost">Наша история</a>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="marquee-inner">
+      <span class="marquee-item">Парфюмерия</span>
+      <span class="marquee-dot">◆</span>
+      <span class="marquee-item">Швейцарские часы</span>
+      <span class="marquee-dot">◆</span>
+      <span class="marquee-item">Уходовая косметика</span>
+      <span class="marquee-dot">◆</span>
+      <span class="marquee-item">Luxury Selection</span>
+      <span class="marquee-dot">◆</span>
+      <span class="marquee-item">Ainuria</span>
+      <span class="marquee-dot">◆</span>
+      <span class="marquee-item">Парфюмерия</span>
+      <span class="marquee-dot">◆</span>
+      <span class="marquee-item">Швейцарские часы</span>
+      <span class="marquee-dot">◆</span>
+      <span class="marquee-item">Уходовая косметика</span>
+      <span class="marquee-dot">◆</span>
+      <span class="marquee-item">Luxury Selection</span>
+      <span class="marquee-dot">◆</span>
+      <span class="marquee-item">Ainuria</span>
+      <span class="marquee-dot">◆</span>
+    </div>
+  </div>
+
+  <!-- CATEGORIES -->
+  <section class="categories">
+    <div class="section-header reveal">
+      <span class="section-label">Каталог</span>
+      <h2 class="section-title">Наши <em>разделы</em></h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="cat-grid">
+      <div class="cat-card reveal">
+        <div class="cat-bg"></div>
+        <div class="cat-icon">🌸</div>
+        <div class="cat-deco"></div>
+        <div class="cat-content">
+          <div class="cat-num">01</div>
+          <div class="cat-name">Парфюмы</div>
+          <div class="cat-desc">Изысканные ароматы мировых домов<br>и нишевых мастеров парфюмерии</div>
+          <a href="#" class="cat-link" onclick="showCat('perfume')">Перейти в раздел</a>
+        </div>
+      </div>
+      <div class="cat-card reveal reveal-delay-1">
+        <div class="cat-bg"></div>
+        <div class="cat-icon">⌚</div>
+        <div class="cat-deco"></div>
+        <div class="cat-content">
+          <div class="cat-num">02</div>
+          <div class="cat-name">Часы</div>
+          <div class="cat-desc">Швейцарское мастерство и точность<br>в каждом механизме</div>
+          <a href="#" class="cat-link" onclick="showCat('watches')">Перейти в раздел</a>
+        </div>
+      </div>
+      <div class="cat-card reveal reveal-delay-2">
+        <div class="cat-bg"></div>
+        <div class="cat-icon">✨</div>
+        <div class="cat-deco"></div>
+        <div class="cat-content">
+          <div class="cat-num">03</div>
+          <div class="cat-name">Косметика</div>
+          <div class="cat-desc">Люксовый уход для кожи с передовыми<br>формулами и редкими ингредиентами</div>
+          <a href="#" class="cat-link" onclick="showCat('beauty')">Перейти в раздел</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED PRODUCTS -->
+  <section class="products-section">
+    <div class="section-header reveal">
+      <span class="section-label">Избранное</span>
+      <h2 class="section-title">Хиты <em>сезона</em></h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="products-grid">
+      <div class="product-card reveal">
+        <div class="product-img">
+          <div class="product-img-inner">🌸</div>
+          <div class="product-overlay"></div>
+          <div class="product-badge">NEW</div>
+        </div>
+        <div class="product-info">
+          <div class="product-brand">Maison Francis</div>
+          <div class="product-name">Rose Infernale</div>
+          <div class="product-variant">EDP · 70 мл</div>
+          <div class="product-footer">
+            <div class="product-price"><span class="product-price-currency">₸</span>89 000</div>
+            <button class="add-btn" onclick="addToCart('Rose Infernale')">В корзину</button>
+          </div>
+        </div>
+      </div>
+      <div class="product-card reveal reveal-delay-1">
+        <div class="product-img">
+          <div class="product-img-inner">⌚</div>
+          <div class="product-overlay"></div>
+        </div>
+        <div class="product-info">
+          <div class="product-brand">Patek Philippe</div>
+          <div class="product-name">Calatrava</div>
+          <div class="product-variant">Ref. 5227G · Белое золото</div>
+          <div class="product-footer">
+            <div class="product-price"><span class="product-price-currency">₸</span>4 200 000</div>
+            <button class="add-btn" onclick="addToCart('Calatrava')">В корзину</button>
+          </div>
+        </div>
+      </div>
+      <div class="product-card reveal reveal-delay-2">
+        <div class="product-img">
+          <div class="product-img-inner">✨</div>
+          <div class="product-overlay"></div>
+          <div class="product-badge">BESTSELLER</div>
+        </div>
+        <div class="product-info">
+          <div class="product-brand">La Mer</div>
+          <div class="product-name">Crème de la Mer</div>
+          <div class="product-variant">Крем · 60 мл</div>
+          <div class="product-footer">
+            <div class="product-price"><span class="product-price-currency">₸</span>145 000</div>
+            <button class="add-btn" onclick="addToCart('Crème de la Mer')">В корзину</button>
+          </div>
+        </div>
+      </div>
+      <div class="product-card reveal reveal-delay-3">
+        <div class="product-img">
+          <div class="product-img-inner">🌿</div>
+          <div class="product-overlay"></div>
+        </div>
+        <div class="product-info">
+          <div class="product-brand">Tom Ford</div>
+          <div class="product-name">Oud Wood</div>
+          <div class="product-variant">EDP · 100 мл</div>
+          <div class="product-footer">
+            <div class="product-price"><span class="product-price-currency">₸</span>125 000</div>
+            <button class="add-btn" onclick="addToCart('Oud Wood')">В корзину</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BANNER -->
+  <div class="banner">
+    <div class="banner-text">
+      <div class="section-label">Наш подход</div>
+      <h2 class="section-title">Только <em>подлинное</em></h2>
+      <p class="banner-body">Каждый товар в нашем каталоге проходит строгий отбор. Мы работаем напрямую с ведущими домами моды и нишевыми брендами, гарантируя подлинность и исключительное качество каждой позиции.</p>
+      <div class="banner-cta">
+        <a href="#" class="btn-primary">Узнать больше</a>
+      </div>
+    </div>
+    <div class="banner-visual">
+      <div class="banner-circle">
+        <div class="banner-dot"></div>
+        <div class="banner-icon">◆</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEWSLETTER -->
+  <section class="newsletter">
+    <div class="reveal">
+      <span class="section-label">Эксклюзивно</span>
+      <h2 class="section-title">Будьте <em>первыми</em></h2>
+    </div>
+    <p class="newsletter-sub reveal">Подпишитесь и получайте информацию о новых поступлениях,<br>эксклюзивных предложениях и закрытых распродажах</p>
+    <div class="newsletter-form reveal">
+      <input type="email" class="newsletter-input" placeholder="Ваш e-mail адрес">
+      <button class="newsletter-submit">Подписаться</button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">AINURIA</div>
+        <p class="footer-desc">Премиальный каталог парфюмерии, часов и уходовой косметики. Роскошь, доступная истинным ценителям.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Каталог</h4>
+        <a href="#" onclick="showCat('perfume')">Парфюмы</a>
+        <a href="#" onclick="showCat('watches')">Часы</a>
+        <a href="#" onclick="showCat('beauty')">Косметика</a>
+        <a href="#">Новинки</a>
+      </div>
+      <div class="footer-col">
+        <h4>Компания</h4>
+        <a href="#">О нас</a>
+        <a href="#">Доставка</a>
+        <a href="#">Гарантия</a>
+        <a href="#">Контакты</a>
+      </div>
+      <div class="footer-col">
+        <h4>Поддержка</h4>
+        <a href="#">Возврат</a>
+        <a href="#">Оплата</a>
+        <a href="#">FAQ</a>
+        <a href="#">Политика</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2024 AINURIA. Все права защищены.</span>
+      <div class="footer-socials">
+        <a href="#">Instagram</a>
+        <a href="#">Telegram</a>
+        <a href="#">WhatsApp</a>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ══════════ PERFUME PAGE ══════════ -->
+<div class="page" id="page-perfume">
+  <div class="cat-page-hero">
+    <button class="back-btn" onclick="showPage('home')">Вернуться</button>
+    <span class="section-label">Раздел 01</span>
+    <h1 class="section-title">Парфюмы</h1>
+  </div>
+  <div class="products-page-grid">
+    <div class="product-card"><div class="product-img"><div class="product-img-inner">🌸</div><div class="product-overlay"></div><div class="product-badge">NEW</div></div><div class="product-info"><div class="product-brand">Maison Francis</div><div class="product-name">Rose Infernale</div><div class="product-variant">EDP · 70 мл</div><div class="product-footer"><div class="product-price"><span class="product-price-currency">₸</span>89 000</div><button class="add-btn" onclick="addToCart('Rose Infernale')">В корзину</button></div></div></div>
+    <div class="product-card"><div class="product-img"><div class="product-img-inner">🌿</div><div class="product-overlay"></div></div><div class="product-info"><div class="product-brand">Tom Ford</div><div class="product-name">Oud Wood</div><div class="product-variant">EDP · 100 мл</div><div class="product-footer"><div class="product-price"><span class="product-price-currency">₸</span>125 000</div><button class="add-btn" onclick="addToCart('Oud Wood')">В корзину</button></div></div></div>
+    <div class="product-card"><div class="product-img"><div class="product-img-inner">🌺</div><div class="product-overlay"></div><div class="product-badge">BESTSELLER</div></div><div class="product-info"><div class="product-brand">Dior</div><div class="product-name">Miss Dior</div><div class="product-variant">EDP · 100 мл</div><div class="product-footer"><div class="product-price"><span class="product-price-currency">₸</span>96 000</div><button class="add-btn" onclick="addToCart('Miss Dior')">В корзину</button></div></div></div>
+    <div class="product-card"><div class="product-img"><div class="product-img-inner">🍋</div><div class="product-overlay"></div></div><div class="product-info"><div class="product-brand">Acqua di Parma</div><div class="product-name">Colonia</div><div class="product-variant">EDC · 180 мл</div><div class="product-footer"><div class="product-price"><span class="product-price-currency">₸</span>78 000</div><button class="add-btn" onclick="addToCart('Colonia')">В корзину</button></div></div></div>
+    <div class="product-card"><div class="product-img"><div class="product-img-inner">🌙</div><div class="product-overlay"></div></div><div class="product-info"><div class="product-brand">Clive Christian</div><div class="product-name">No. 1</div><div class="product-variant">Perfume · 50 мл</div><div class="product-footer"><div class="product-price"><span class="product-price-currency">₸</span>380 000</div><button class="add-btn" onclick="addToCart('Clive Christian No.1')">В корзину</button></div></div></div>
+    <div class="product-card"><div class="product-img"><div class="product-img-inner">🌷</div><div class="product-overlay"></div></div><div class="product-info"><div class="product-brand">Chanel</div><div class="product-name">N°5</div><div class="product-variant">EDP · 100 мл</div><div class="product-footer"><div class="product-price"><span class="product-price-currency">₸</span>112 000</div><button class="add-btn" onclick="addToCart('Chanel N°5')">В корзину</button></div></div></div>
+  </div>
+  <footer style="margin-top:2px">
+    <div class="footer-bottom" style="padding-top:0;border-top:none">
+      <span class="footer-copy">© 2024 AINURIA</span>
+      <div class="footer-socials"><a href="#">Instagram</a><a href="#">Telegram</a></div>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════ WATCHES PAGE ══════════ -->
+<div class="page" id="page-watches">
+  <div class="cat-page-hero">
+    <button class="back-btn" onclick="showPage('home')">Вернуться</button>
+    <span class="section-label">Раздел 02</span>
+    <h1 class="section-title">Часы</h1>
+  </div>
+  <div class="products-page-grid">
+    <div class="product-card"><div class="product-img"><div class="product-img-inner">⌚</div><div class="product-overlay"></div><div class="product-badge">НОВИНКА</div></div><div class="product-info"><div class="product-brand">Patek Philippe</div><div class="product-name">Calatrava</div><div class="product-variant">Ref. 5227G · Белое золото</div><div class="product-footer"><div class="product-price"><span class="product-price-currency">₸</span>4 200 000</div><button class="add-btn" onclick="addToCart('Patek Calatrava')">В корзину</button></div></div></div>
+    <div class="product-card"><div class="product-img"><div class="product-img-inner">🕰️</div><div class="product-overlay"></div></div><div class="product-info"><div class="product-brand">Rolex</div><div class="product-name">Datejust 41</div><div class="product-variant">Oyster · Jubilee</div><div class="product-footer"><div class="product-price"><span class="product-price-currency">₸</span>3 800 000</div><button class="add-btn" onclick="addToCart('Rolex Datejust')">В корзину</button></div></div></div>
+    <div class="product-card"><div class="product-img"><div class="product-img-inner">⏱️</div><div class="product-overlay"></div><div class="product-badge">BESTSELLER</div></div><div class="product-info"><div class="product-brand">Audemars Piguet</div><div class="product-name">Royal Oak</div><div class="product-variant">Self-winding · 41мм</div><div class="product-footer"><div class="product-price"><span class="product-price-currency">₸</span>8 500 000</div><button class="add-btn" onclick="addToCart('Royal Oak')">В корзину</button></div></div></div>
+    <div class="product-card"><div class="product-img"><div class="product-img-inner">🪙</div><div class="product-overlay"></div></div><div class="product-info"><div class="product-brand">Cartier</div><div class="product-name">Santos de Cartier</div><div class="product-variant">Сталь · 39.8мм</div><div class="product-footer"><div class="product-price"><span class="product-price-currency">₸</span>1 900 000</div><button class="add-btn" onclick="addToCart('Santos Cartier')">В корзину</button></div></div></div>
+    <div class="product-card"><div class="product-img"><div class="product-img-inner">💎</div><div class="product-overlay"></div></div><div class="product-info"><div class="product-brand">IWC</div><div class="product-name">Portugieser</div><div class="product-variant">Хронограф · 41мм</div><div class="product-footer"><div class="product-price"><span class="product-price-currency">₸</span>2 400 000</div><button class="add-btn" onclick="addToCart('IWC Portugieser')">В корзину</button></div></div></div>
+    <div class="product-card"><div class="product-img"><div class="product-img-inner">🌟</div><div class="product-overlay"></div></div><div class="product-info"><div class="product-brand">Jaeger-LeCoultre</div><div class="product-name">Reverso</div><div class="product-variant">Classic · Large · Thin</div><div class="product-footer"><div class="product-price"><span class="product-price-currency">₸</span>3 100 000</div><button class="add-btn" onclick="addToCart('Jaeger Reverso')">В корзину</button></div></div></div>
+  </div>
+  <footer style="margin-top:2px">
+    <div class="footer-bottom" style="padding-top:0;border-top:none">
+      <span class="footer-copy">© 2024 AINURIA</span>
+      <div class="footer-socials"><a href="#">Instagram</a><a href="#">Telegram</a></div>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════ BEAUTY PAGE ══════════ -->
+<div class="page" id="page-beauty">
+  <div class="cat-page-hero">
+    <button class="back-btn" onclick="showPage('home')">Вернуться</button>
+    <span class="section-label">Раздел 03</span>
+    <h1 class="section-title">Косметика</h1>
+  </div>
+  <div class="products-page-grid">
+    <div class="product-card"><div class="product-img"><div class="product-img-inner">✨</div><div class="product-overlay"></div><div class="product-badge">BESTSELLER</div></div><div class="product-info"><div class="product-brand">La Mer</div><div class="product-name">Crème de la Mer</div><div class="product-variant">Крем · 60 мл</div><div class="product-footer"><div class="product-price"><span class="product-price-currency">₸</span>145 000</div><button class="add-btn" onclick="addToCart('Crème de la Mer')">В корзину</button></div></div></div>
+    <div class="product-card"><div class="product-img"><div class="product-img-inner">💧</div><div class="product-overlay"></div></div><div class="product-info"><div class="product-brand">SK-II</div><div class="product-name">Facial Treatment Essence</div><div class="product-variant">Эссенция · 230 мл</div><div class="product-footer"><div class="product-price"><span class="product-price-currency">₸</span>89 000</div><button class="add-btn" onclick="addToCart('SK-II Essence')">В корзину</button></div></div></div>
+    <div class="product-card"><div class="product-img"><div class="product-img-inner">🌹</div><div class="product-overlay"></div><div class="product-badge">NEW</div></div><div class="product-info"><div class="product-brand">Sisley</div><div class="product-name">Black Rose Cream Mask</div><div class="product-variant">Маска · 60 мл</div><div class="product-footer"><div class="product-price"><span class="product-price-currency">₸</span>67 000</div><button class="add-btn" onclick="addToCart('Sisley Black Rose')">В корзину</button></div></div></div>
+    <div class="product-card"><div class="product-img"><div class="product-img-inner">🌿</div><div class="product-overlay"></div></div><div class="product-info"><div class="product-brand">Augustinus Bader</div><div class="product-name">The Rich Cream</div><div class="product-variant">Крем · 50 мл</div><div class="product-footer"><div class="product-price"><span class="product-price-currency">₸</span>198 000</div><button class="add-btn" onclick="addToCart('Augustinus Bader')">В корзину</button></div></div></div>
+    <div class="product-card"><div class="product-img"><div class="product-img-inner">☀️</div><div class="product-overlay"></div></div><div class="product-info"><div class="product-brand">Sulwhasoo</div><div class="product-name">Timetreasure Invigorating</div><div class="product-variant">Сыворотка · 30 мл</div><div class="product-footer"><div class="product-price"><span class="product-price-currency">₸</span>112 000</div><button class="add-btn" onclick="addToCart('Sulwhasoo')">В корзину</button></div></div></div>
+    <div class="product-card"><div class="product-img"><div class="product-img-inner">🫧</div><div class="product-overlay"></div></div><div class="product-info"><div class="product-brand">La Prairie</div><div class="product-name">Platinum Rare</div><div class="product-variant">Крем · 30 мл</div><div class="product-footer"><div class="product-price"><span class="product-price-currency">₸</span>340 000</div><button class="add-btn" onclick="addToCart('La Prairie Platinum')">В корзину</button></div></div></div>
+  </div>
+  <footer style="margin-top:2px">
+    <div class="footer-bottom" style="padding-top:0;border-top:none">
+      <span class="footer-copy">© 2024 AINURIA</span>
+      <div class="footer-socials"><a href="#">Instagram</a><a href="#">Telegram</a></div>
+    </div>
+  </footer>
+</div>
+
+<script>
+  // ── Cursor ──
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+    setTimeout(() => {
+      ring.style.left = e.clientX + 'px';
+      ring.style.top = e.clientY + 'px';
+    }, 60);
+  });
+  document.querySelectorAll('a,button,.cat-card,.product-card').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      ring.style.transform = 'translate(-50%,-50%) scale(1.5)';
+      ring.style.opacity = '1';
+    });
+    el.addEventListener('mouseleave', () => {
+      ring.style.transform = 'translate(-50%,-50%) scale(1)';
+      ring.style.opacity = '0.6';
+    });
+  });
+
+  // ── Page navigation ──
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    initReveal();
+  }
+
+  function showCat(cat) {
+    showPage(cat);
+  }
+
+  // ── Cart ──
+  let cartCount = 0;
+  function addToCart(name) {
+    cartCount++;
+    document.getElementById('cartBtn').textContent = `Корзина (${cartCount})`;
+    const toast = document.getElementById('toast');
+    document.getElementById('toastItem').textContent = name;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  }
+
+  // ── Scroll reveal ──
+  function initReveal() {
+    const els = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) e.target.classList.add('visible');
+      });
+    }, { threshold: 0.1 });
+    els.forEach(el => { el.classList.remove('visible'); obs.observe(el); });
+  }
+  initReveal();
+</script>
+</body>
+</html>
